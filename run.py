@@ -60,10 +60,12 @@ def run(data, efficiency, battery_capacity, panel_watt, power_use_daytime,
     top['des_vars.panels_array_power'] = panel_watt
     top['des_vars.power_capacity'] = battery_capacity
 
+    top.run()
+
     fig = make_plot(top)
 
     fig.savefig(o, format=o.split(".")[-1], bbox_inches='tight', 
                pad_inches=0)
 
 if __name__ == '__main__':
-    hello()
+    run()
