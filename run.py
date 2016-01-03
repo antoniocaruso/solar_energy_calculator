@@ -35,7 +35,7 @@ import click
 @click.option('--end_time', default=23.0, prompt='End time cut-off (hour 0-23)',
               help='End time cut-off (hour 0-23). Collected PV power after this hour is set to zero. Used to model obstruction at dusk')
 
-def hello(data, efficiency, battery_capacity, panel_watt, power_use_daytime, 
+def run(data, efficiency, battery_capacity, panel_watt, power_use_daytime, 
           power_use_nighttime, power_use_constant, start_time, end_time, o,
           power_use_direct, direct_min_temp):
     """Solar calculation application"""
@@ -44,9 +44,12 @@ def hello(data, efficiency, battery_capacity, panel_watt, power_use_daytime,
         data = data.split(",")
 
     top = Problem()
-    top.root = Basic(start_time=start_time, end_time=end_time, fns=data,
-                     efficiency = efficiency)
+    top.root = Basic(fns=data)
     top.setup(check=False)
+
+    top.root.data.start_time = start_time
+    top.root.data.end_time = end_time
+    top.root.data.efficiency = efficiency
 
     top['loads.P_constant'] = power_use_constant
     top['loads.P_daytime'] = power_use_daytime
