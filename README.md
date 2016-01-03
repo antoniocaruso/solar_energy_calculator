@@ -27,6 +27,8 @@ The core components of the model are contained in `solar.py`. The file `basic.py
 model of powered loads and overall problem specification. This is used to 
 make the end-user command line interface problem, `run.py`. A more complex example is shown in `greenhouse.py`.
 
+An IPython notebook interface is also provided in [run.ipyb](https://github.com/thearn/solar_energy_calculator/blob/master/run.ipynb), exposing the same parameters as the command line application.
+
 This is very much a work-in-progress. I am not an electrical engineer by training, but I do multidisciplinary systems analysis and optimization. It's my goal for the model to be sufficient for the design of real-world low power systems (see below for a list of projects that I have in mind).
 
 Requirements
@@ -35,9 +37,10 @@ Requirements
 - Numpy, scipy, and matplotlib. It's probably best to use a system package manager or a distribution like [Anaconda](https://www.continuum.io/downloads) to set these up
 - [OpenMDAO 1.0](http://openmdao.org/) or greater: `pip install openmdao` or clone and install from Github
 - [Click](http://click.pocoo.org/5/): Used to build the command-line interface application,  `pip install click`
+- IPython can be used to run the notebook version of the application
 - A small test file can be run to verify that everything is set up: `cd lib; python test_run.py`
 
-Summary of end-user application, `run.py`
+Summary of end-user application
 ---------------------
 This application is a command-line interface to the simple model in `basic.py`. It produces a visualization of the performance of a photovoltaic 
 energy collection and storage system over the course of one year of operation on an hour-by-hour basis, based on a variety of parameters:
@@ -109,6 +112,9 @@ Options:
                                model obstruction at dusk
   --help                       Show this message and exit.
 ```
+
+Or, open the provided [IPython notebook](https://github.com/thearn/solar_energy_calculator/blob/master/run.ipynb) and set the same parameters.
+
 This produces the figure like the one shown in the previous section.
 If you don't specify a particular variable, you will be prompted to enter one. Press
 enter to accept the shown default value.
@@ -137,6 +143,8 @@ Consider setting up a [5.2 W panel](https://www.sparkfun.com/products/9241) with
 So the power capacity of the battery is: 2Ah * 3.7V = 7.4 Wh, and we can run our model with:
 
 `python run.py -data data/cleveland.csv --panel_watt 5.2 --battery_capacity 7.4 --power_use_constant 0.1`
+
+The [provided IPython notebook](https://github.com/thearn/solar_energy_calculator/blob/master/run.ipynb) is already set with the parameter values for this example.
 
 Here, I used the NREL CSV data file for my location (in the vicinity of Cleveland, OH). This gives the resulting figure:
 
