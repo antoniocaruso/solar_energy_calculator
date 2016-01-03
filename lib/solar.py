@@ -15,7 +15,7 @@ power_idx = -2
 class DataSource(Component):
     """Parses NREL data and provides associated transient outputs"""
 
-    def __init__(self, fns=None, start_time=10, end_time=15, efficiency=0.95):
+    def __init__(self, fns=None):
         super(DataSource, self).__init__()
 
         # defaults to northeast ohio if no other data provided
@@ -29,14 +29,11 @@ class DataSource(Component):
         h = datetime.timedelta(hours=1)
         self.dates = [start + i*h for i in range(self.data.shape[0])]
         self.weekdays = np.array([i.weekday() for i in self.dates])
+        
         # set efficiency from input
-        self.efficiency = efficiency
-
-        # usable PV power only between specified start and end times
-        idx = np.where(self.data[:, 2] < start_time)
-        self.data[idx, power_idx] = 0.0
-        idx = np.where(self.data[:, 2] > end_time)
-        self.data[idx, power_idx] = 0.0
+        self.start_time = 0
+        self.end_time = 23
+        self.efficiency = 0.96
         
         # length of time series
         self.n = self.data.shape[0]
@@ -55,6 +52,11 @@ class DataSource(Component):
     def solve_nonlinear(self, p, u, r):
         # calculations for output variables
 
+        # usable PV power only between specified start and end times
+        idx = np.where(self.data[:, 2] < self.start_time)
+        self.data[idx, power_idx] = 0.0
+        idx = np.where(self.data[:, 2] > self.end_time)
+        self.data[idx, power_idx] = 0.0
         # scale NREL power from 4kw to 1W, and by efficiency
         u['P_base'] = self.data[:, power_idx] / 4000.0 * self.efficiency
 

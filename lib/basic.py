@@ -60,12 +60,11 @@ class Basic(Group):
     Simple solar PV model. Collects all components, and establishes data 
     relationships.
     """
-    def __init__(self, start_time=10, end_time=15, fns=None, efficiency = 0.95):
+    def __init__(self, fns=None):
         super(Basic, self).__init__()
         
         # add NREL data parsing component
-        self.add("data", DataSource(start_time=start_time, end_time=end_time, 
-            fns=fns, efficiency = efficiency))
+        self.add("data", DataSource(fns=fns))
         n = self.data.n
 
         # Not necessary at this point, but the variables exposed here can be
@@ -105,10 +104,11 @@ if __name__ == "__main__":
     import pylab
 
     top = Problem()
-    top.root = Basic(start_time=0, end_time=23)
+    top.root = Basic()
     
     top.setup(check=False)
-
+    top.root.data.start_time = 0
+    top.root.data.end_time = 23
     top['loads.P_constant'] = 0.1
     top['loads.P_daytime'] = 0.0
     top['loads.P_nighttime'] = 0.0

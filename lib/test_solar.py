@@ -24,6 +24,10 @@ class TestRun(unittest.TestCase):
         top['des_vars.panels_array_power'] = 100
         top['des_vars.power_capacity'] = 30
 
+        top.root.data.start_time = 10
+        top.root.data.end_time = 15
+        top.root.data.efficiency = 0.95
+
         top.run()
 
         soc_min = top['batteries.SOC'].min()
