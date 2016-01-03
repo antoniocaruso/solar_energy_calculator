@@ -34,6 +34,7 @@ Requirements
 - Python 2.7/3.4 or higher
 - Numpy, scipy, and matplotlib. It's probably best to use a system package manager or a distribution like [Anaconda](https://www.continuum.io/downloads) to set these up
 - [OpenMDAO 1.0](http://openmdao.org/) or greater: `pip install openmdao` or clone and install from Github
+- [Click](http://click.pocoo.org/5/): Used to build the command-line interface application,  `pip install click`
 - A small test file can be run to verify that everything is set up: `cd lib; python test_run.py`
 
 Summary of end-user application, `run.py`
@@ -193,7 +194,7 @@ Example: Solar water pump & night spotlight
 This example is the design of a solar water pumping station with a small night light.
 For this, a [30 W DC water pump](http://www.amazon.com/Diaphragm-Pressure-Automatic-Purifier-Pressurizer/dp/B015FL84GA) will be powered only when at least 30 W of solar power is collectable from the array (basically treated as a direct load), and only when the ambient temperature is greater than 32 Deg. F (0 C). A constant background draw of 0.5W will also be made for sensors and micro-electronics, and 4 W will be used to power a [small LED outdoor light](http://www.amazon.com/Mr-lamp-White-50watt-Equivalent-Spotlight/dp/B017K9E7BQ/ref=sr_1_26?s=hi&ie=UTF8&qid=1451772369&sr=1-26&keywords=4+watt+led+bulb) during night hours.
 
-We can run this with:
+We can run this with a 100 W panel and 420 Wh battery:
 
 `python run.py -data data/cleveland.csv --panel_watt 100 --battery_capacity 420 --power_use_nighttime 4 --power_use_constant 0.5 --power_use_direct 30 --direct_min_temp 32`
 
@@ -215,7 +216,7 @@ Interpretation:
 - Battery SOC is not adversely affected by the daytime pump operation, and has an acceptable discharge depth of 80% occurring in the winter. 
 
 - Experimenting with the model shows that SOC is much more sensitive to the constant background loads than the pump load level, since the system will not operate the pump unless the panel can support it directly. Thus, the pump operation largely bypasses the battery storage, but uses energy during the day at the expense of operating the light at night (via the battery). 
-- Interestingly, for a fixed PV array and battery size, the directly load power level (the pump wattage) that maximizes total energy delivered to the pump over the year is not directly intuitive - setting it very low does not deliver as much cumulative power, while setting it too high does not turn it on often enough to maximize delivered energy. For a 100W panel + 420 Wh battery, a 30W pump seems to have about the maximum annual energy you can put to use - around the 45 kWh collected in the example. 
+- Interestingly, for a fixed PV array and battery size, the directly load power level (the pump wattage) that maximizes total energy delivered to the pump over the year is not directly intuitive - setting it very low does not deliver as much cumulative energy, while setting it too high does not turn it on often enough to maximize delivered energy. For a 100W panel + 420 Wh battery, a 30W pump seems to have about the maximum annual energy you can put to use - around the 45 kWh collected in the example. 
  
  - Exploring this a bit: 
      
