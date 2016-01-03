@@ -196,7 +196,7 @@ For this, a [30 W DC water pump](http://www.amazon.com/Diaphragm-Pressure-Automa
 
 We can run this with a 100 W panel and 420 Wh battery:
 
-`python run.py -data data/cleveland.csv --panel_watt 100 --battery_capacity 420 --power_use_nighttime 4 --power_use_constant 0.5 --power_use_direct 30 --direct_min_temp 32`
+`python run.py -data lib/data/cleveland.csv --panel_watt 100 --battery_capacity 420 --power_use_nighttime 4 --power_use_constant 0.5 --power_use_direct 30 --direct_min_temp 32`
 
 Which gives:
 
