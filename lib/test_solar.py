@@ -21,7 +21,7 @@ class TestRun(unittest.TestCase):
 
         top['loads.P_constant'] = 1
 
-        top['des_vars.panels_array_power'] = 100
+        top['des_vars.array_power'] = 100
         top['des_vars.power_capacity'] = 30
 
         top.root.data.start_time = 10
@@ -40,7 +40,7 @@ class TestRun(unittest.TestCase):
 
         top['loads.P_constant'] = 10
 
-        top['des_vars.panels_array_power'] = 300
+        top['des_vars.array_power'] = 300
         top['des_vars.power_capacity'] = 420
 
         top.run()

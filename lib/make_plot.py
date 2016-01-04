@@ -30,8 +30,11 @@ def make_plot(top):
     min_date = dates[idx][0]
 
     cap = top['des_vars.power_capacity']
-    panels = top['des_vars.panels_array_power']
-    gen = top['panels.P_generated']
+    panels = top['data.array_power']
+    tilt = top['data.array_tilt']
+    location = top.root.data.location
+    losses = top['data.losses']
+    gen = top['data.P_generated']
     consumed = top['batteries.P_consumption']
     consumed_direct = top['loads.P_consumption_direct']
     idx = np.where(gen >= 0.0)
@@ -66,11 +69,10 @@ def make_plot(top):
             energy_direct = 0
             day = d.date()
 
-    title = """Panel array: %2.2f W rated
-Battery Capacity: %2.2f W*h
-Battery SOC min: %2.2f %% on %s
+    title = """Location: %s Panel array: %2.2f W rated, Tilt: %2.1f Losses: %2.2f %%
+Battery Capacity: %2.2f W*h, Battery SOC min: %2.2f %% on %s
 Total power collectable: %2.0f kWh, Direct load powered %2.0f kWh, All powered %2.0f kWh, Net surplus: %2.0f kWh
-""" % (panels, cap, SOC_min*100.0, min_date.strftime("%B %d"), sum(day_energy)/1000.0, sum(day_consumed_direct)/1000.0, sum(day_consumed)/1000.0, sum(day_energy_net)/1000.0)
+""" % (location, panels, tilt, losses, cap, SOC_min*100.0, min_date.strftime("%B %d"), sum(day_energy)/1000.0, sum(day_consumed_direct)/1000.0, sum(day_consumed)/1000.0, sum(day_energy_net)/1000.0)
     pylab.suptitle(title)
     pylab.subplot(411)
     mx = gen[idx].max()

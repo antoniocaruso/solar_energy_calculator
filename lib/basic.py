@@ -7,7 +7,7 @@ import numpy as np
 
 from parser import parse_data
 
-from solar import Panels, Batteries, DataSource, Costs
+from solar import Batteries, DataSource, Costs
 from make_plot import make_plot
 
 class BasicLoads(Component):
@@ -30,7 +30,7 @@ class BasicLoads(Component):
         self.add_param("hour", np.zeros(self.n), units="h")
         self.add_param("irradiance", np.zeros(self.n))
         self.add_param("wind", np.zeros(self.n), units="m/s")
-        self.add_param("P_base", np.zeros(self.n), units="W")
+        
         self.add_output("P_consumption", np.zeros(self.n), units="W")
         self.add_output("P_consumption_direct", np.zeros(self.n), units="W")
 
@@ -41,7 +41,7 @@ class BasicLoads(Component):
         u['P_consumption'] += p['P_constant']
 
         # daytime - based on PV
-        idx = np.where(p['P_base'] >= 0.01)
+        idx = np.where(p['P_generated'] >= 0.01)
         u['P_consumption'][idx] += p['P_daytime']
 
         # nightime - based on irradiance
@@ -71,13 +71,11 @@ class Basic(Group):
         # used later for numerical optimization (or anything that makes use
         # of model total derivative calculations)
         params = (
-            ('panels_array_power', 100.0, {'units' : 'W'}),
+            ('array_power', 100.0, {'units' : 'W'}),
             ('power_capacity', 50.0, {'units' : 'W*h'}),
         )
         self.add('des_vars', IndepVarComp(params))
 
-        # PV panel component
-        self.add("panels", Panels(n))
         # Battery component
         self.add("batteries", Batteries(n))
         # Load component
@@ -86,17 +84,16 @@ class Basic(Group):
         self.add("cost", Costs())   
 
         # Data relationships
-        self.connect("des_vars.panels_array_power", ["panels.array_power", "cost.array_power"])
+        self.connect("des_vars.array_power", ["data.array_power", "cost.array_power"])
         self.connect("des_vars.power_capacity", ["batteries.power_capacity", "cost.power_capacity"])
 
-        self.connect("data.P_base", ["panels.P_base", "loads.P_base"])
         self.connect("data.ambient_temperature", "loads.ambient_temperature")
         self.connect("data.cell_temperature", "loads.cell_temperature")
         self.connect("data.wind", "loads.wind")
         self.connect("data.irradiance", "loads.irradiance")
         self.connect("data.hour", "loads.hour")
+        self.connect("data.P_generated", ["batteries.P_generated", "loads.P_generated"])
 
-        self.connect("panels.P_generated", ["batteries.P_generated", "loads.P_generated"])
         self.connect("loads.P_consumption", "batteries.P_consumption")
 
 
@@ -107,16 +104,22 @@ if __name__ == "__main__":
     top.root = Basic()
     
     top.setup(check=False)
+    
+    top.root.data.nrel_api_key = "DEMO_KEY"
+    top.root.data.location = "44256"
+
+    # cutt-off times for PV power due to shading:
     top.root.data.start_time = 0
     top.root.data.end_time = 23
-    top['loads.P_constant'] = 0.1
-    top['loads.P_daytime'] = 0.0
-    top['loads.P_nighttime'] = 0.0
-    top['loads.P_direct'] = 0.0
-    top['loads.switch_temp'] = 0.0
 
-    top['des_vars.panels_array_power'] = 5.2 # Watts
-    top['des_vars.power_capacity'] = 3.7*2 # Watt-hours
+    top['loads.P_constant'] = 3
+    top['loads.P_daytime'] = 0.0
+    top['loads.P_nighttime'] = 5.0
+    top['loads.P_direct'] = 30.0
+    top['loads.switch_temp'] = 32.0
+
+    top['des_vars.array_power'] = 200 # Watts
+    top['des_vars.power_capacity'] = 12*100 # Watt-hours
 
     top.run()
     

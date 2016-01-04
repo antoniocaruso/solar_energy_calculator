@@ -8,7 +8,7 @@ import numpy as np
 
 from parser import parse_data
 
-from solar import Panels, Batteries, DataSource, Costs
+from solar import Batteries, DataSource, Costs
 from make_plot import make_plot
 
 class GreenhouseLoads(Component):
@@ -24,7 +24,6 @@ class GreenhouseLoads(Component):
         self.add_param("month", np.zeros(self.n), units="mo")
         self.add_param("irradiance", np.zeros(self.n))
         self.add_param("wind", np.zeros(self.n), units="m/s")
-        self.add_param("P_base", np.zeros(self.n), units="W")
         self.add_param("P_generated", np.zeros(self.n), units="W")
 
         self.add_output("P_consumption_direct", np.zeros(self.n), units="W")
@@ -38,11 +37,8 @@ class GreenhouseLoads(Component):
         u['P_consumption'] += 3
 
         # run a 15 W cooling fan as a direct load when ambient temp > 60
-        # between april and october
         idx = np.where((p['P_generated'] >= 15) & 
-                       (p['ambient_temperature'] >= 60) &
-                       (p['month'] >= 4) & 
-                       (p['month'] <= 10))
+                       (p['ambient_temperature'] >= 60))
         u['P_consumption'][idx] += 15
         u['P_consumption_direct'][idx] += 15
 
@@ -80,15 +76,13 @@ class Greenhouse(Group):
         self.add('des_vars', IndepVarComp(params))
 
 
-        self.add("panels", Panels(n))
         self.add("batteries", Batteries(n))
         self.add("loads", GreenhouseLoads(n))
         self.add("cost", Costs())
 
-        self.connect("des_vars.panels_array_power", ["panels.array_power", "cost.array_power"])
+        self.connect("des_vars.panels_array_power", ["data.array_power", "cost.array_power"])
         self.connect("des_vars.power_capacity", ["batteries.power_capacity", "cost.power_capacity"])
 
-        self.connect("data.P_base", ["panels.P_base", "loads.P_base"])
         self.connect("data.ambient_temperature", "loads.ambient_temperature")
         self.connect("data.cell_temperature", "loads.cell_temperature")
         self.connect("data.wind", "loads.wind")
@@ -98,7 +92,7 @@ class Greenhouse(Group):
         self.connect("data.weekday", "loads.weekday")
         self.connect("data.month", "loads.month")
 
-        self.connect("panels.P_generated", ["batteries.P_generated", "loads.P_generated"])
+        self.connect("data.P_generated", ["batteries.P_generated", "loads.P_generated"])
         self.connect("loads.P_consumption", "batteries.P_consumption")
 
 
@@ -111,6 +105,13 @@ if __name__ == "__main__":
     top.root.fd_options['step_size'] = 1.0
     
     top.setup(check=False)
+
+    top.root.data.nrel_api_key = "DEMO_KEY"
+    top.root.data.location = "44256"
+
+    # cutt-off times for PV power due to shading:
+    top.root.data.start_time = 10
+    top.root.data.end_time = 16
 
     top['des_vars.panels_array_power'] = 350.0
     top['des_vars.power_capacity'] = 12*100
