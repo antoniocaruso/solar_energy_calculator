@@ -297,6 +297,8 @@ Future plans
 ==================
 There are a lot of possible improvements and enhancements:
  
+ - NREL has an [API](https://developer.nrel.gov/docs/solar/pvwatts-v5/) which could be used to automatically get the data
+ 
  - Modeling of system voltage matching and PWM vs. MPPT controller technologies
  
  - More sophisticated battery component with voltage estimation and temperature dependent discharge curves and charge characteristics
