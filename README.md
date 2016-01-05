@@ -34,16 +34,17 @@ Requirements
 - Python 2.7/3.4 or higher
 - Numpy, scipy, and matplotlib. It's probably best to use a system package manager or a distribution like [Anaconda](https://www.continuum.io/downloads) to set these up
 - [OpenMDAO 1.0](http://openmdao.org/) or greater: `pip install openmdao` or clone and install from Github
-- IPython, to run the notebook
-- A small test file can be run to verify that everything is set up: `cd lib; python test_run.py`
+- [Requests](http://docs.python-requests.org/en/latest/) module, to collect data from NREL's servers `pip install requests`
+- [IPython/Jupyter](http://ipython.org/), to run the examples notebook `pip install jupyter`
+- A small test file can be run to verify that everything is set up: `cd lib; python test_run.py` 
 
 Summary of IPython notebook example
 ---------------------
-This application is a command-line interface to the simple model in `basic.py`. It produces a visualization of the performance of a photovoltaic 
+The examples notebook provides an interactive interface to the simple model in `basic.py`. It produces a visualization of the performance of a photovoltaic 
 energy collection and storage system over the course of one year of operation on an hour-by-hour basis, based on a variety of parameters:
 
  - Geographic location
- - PV array size (in rated watts)
+ - PV array size (in rated watts) and orientation
  - Battery bank size (in watt-hours)
  - Power usage (load) specification (constant, daytime, night time, or direct PV load)
 
@@ -62,7 +63,7 @@ This transient analysis is what differentiates this code from other solar energy
 
 More in-depth customization
 ==========================
-You can create a much more customized model than would be possible with the command-line application by directly implementing your own OpenMDAO model that uses the components in `solar.py`. For example, see `greenhouse.py`, which implements a load component with temperature logic, time-of-day logic, etc. The data source component that parses the NREL data also provides solar cell temperature, wind speed values, solar irradiance, and hour of day information that can be used to describe transient power loads.
+You can create a much more customized model than what is provided in the notebook by directly implementing your own OpenMDAO model that uses the components in `solar.py`. For example, see `greenhouse.py`, which implements a load component with temperature logic, time-of-day logic, etc. The data source component that parses the NREL data also provides solar cell temperature, wind speed values, solar irradiance, and hour of day information that can be used to describe transient power loads.
 
 Some background on my motivations: I have a few acres of land with decent line-of-sight to the sun, and (despite the sometimes difficult Great Lakes climate) I have ideas for a couple of different solar electric projects that can be informed by this model:
 
