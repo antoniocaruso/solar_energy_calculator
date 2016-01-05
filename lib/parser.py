@@ -10,11 +10,18 @@ import os
 
 fpath = os.path.dirname(os.path.realpath(__file__))
 
-def get_nrel(key, address, panel_watts, tilt=20.0, losses=14.0, use_cache=True):
+def get_nrel(key, address, panel_watts, tilt=20.0, losses=14.0, array_type = 0):
+
+    if isinstance(address, list):
+        data = []
+        for addr in address:
+            data += get_nrel(key, addr, panel_watts, tilt=tilt, losses=losses, 
+                             array_type = array_type).tolist()
+        return np.array(data)
 
     capacity = panel_watts / 1000.0
 
-    url = "https://developer.nrel.gov/api/pvwatts/v5.json?api_key=%s&address=%s&system_capacity=%f&azimuth=180&tilt=%f&array_type=0&module_type=0&losses=%f&timeframe=hourly" % (key, address, capacity, tilt, losses)
+    url = "https://developer.nrel.gov/api/pvwatts/v5.json?api_key=%s&address=%s&system_capacity=%f&azimuth=180&tilt=%f&array_type=%d&module_type=0&losses=%f&timeframe=hourly" % (key, address, capacity, tilt, array_type, losses)
 
     r = requests.get(url) 
 

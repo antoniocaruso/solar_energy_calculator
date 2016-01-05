@@ -17,6 +17,7 @@ class DataSource(Component):
 
     nrel_api_key = "DEMO_KEY"
     location = "Cleveland, OH USA"
+    array_type = 0
 
     def __init__(self, fns=None):
         super(DataSource, self).__init__()
@@ -54,10 +55,10 @@ class DataSource(Component):
     def solve_nonlinear(self, p, u, r):
         # get data from NREL servers, scale low power array if necessary
         if p['array_power'] < 50.0:
-            self.data = get_nrel(self.nrel_api_key, self.location, 50.0, p['array_tilt'], p['losses'])
+            self.data = get_nrel(self.nrel_api_key, self.location, 50.0, p['array_tilt'], p['losses'], self.array_type)
             self.data[:,-2:] = self.data[:,-2:] * (p['array_power'] / 50.0)
         else:    
-            self.data = get_nrel(self.nrel_api_key, self.location, p['array_power'], p['array_tilt'], p['losses'])
+            self.data = get_nrel(self.nrel_api_key, self.location, p['array_power'], p['array_tilt'], p['losses'], self.array_type)
 
         # usable PV power only between specified start and end times
         idx = np.where(self.data[:, 2] < self.start_time)

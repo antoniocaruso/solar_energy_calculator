@@ -2,3 +2,5 @@
 *.DS_Store
 deriv.txt
 lib/test_fig.png
+nrel.txt
+.ipynb_checkpoints/

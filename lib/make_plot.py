@@ -33,6 +33,9 @@ def make_plot(top):
     panels = top['data.array_power']
     tilt = top['data.array_tilt']
     location = top.root.data.location
+    if isinstance(location, list):
+        location = ', '.join(location)
+
     losses = top['data.losses']
     gen = top['data.P_generated']
     consumed = top['batteries.P_consumption']

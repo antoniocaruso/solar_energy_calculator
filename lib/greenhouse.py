@@ -107,7 +107,7 @@ if __name__ == "__main__":
     top.setup(check=False)
 
     top.root.data.nrel_api_key = "DEMO_KEY"
-    top.root.data.location = "44256"
+    top.root.data.location = "cleveland, ohio"
 
     # cutt-off times for PV power due to shading:
     top.root.data.start_time = 10

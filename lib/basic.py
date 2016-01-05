@@ -38,6 +38,7 @@ class BasicLoads(Component):
     def solve_nonlinear(self, p, u, r):
         # constant background consumption
         u['P_consumption'] = np.zeros(self.n)
+        u['P_consumption_direct'] = np.zeros(self.n)
         u['P_consumption'] += p['P_constant']
 
         # daytime - based on PV
@@ -49,7 +50,8 @@ class BasicLoads(Component):
         u['P_consumption'][idx] += p['P_nighttime']
 
         # direct load - based on available power
-        idx = np.where((p['P_generated'] >= p['P_direct']) & (p['ambient_temperature'] >= p['switch_temp']))
+        idx = np.where((p['P_generated'] >= p['P_direct']) & 
+                       (p['ambient_temperature'] >= p['switch_temp']))
         u['P_consumption'][idx] += p['P_direct']
         u['P_consumption_direct'][idx] += p['P_direct']
 
