@@ -20,8 +20,8 @@ analysis of ground-based photo-voltaic energy systems, included battery storage.
 The core of this code is a model which implements a transient power balance
 calculation, culminating in a time integration of a battery bank state-of-charge over time. This allows a user to very easily size a solar panel array and battery bank together for their intended application. It's a reasonably low fidelity model, and only takes a few seconds to run.
 
-This model was written using NASA's OpenMDAO framework, and makes use of data from
-the U.S. Department of Energy's National Renewable Energy Laboratory (NREL).
+This model was written using NASA's [OpenMDAO framework](http://openmdao.org/), and makes use of data from
+the U.S. Department of Energy's [National Renewable Energy Laboratory (NREL)](http://www.nrel.gov/).
 
 The core components of the model are contained in `solar.py`. The file `basic.py` includes an example
 model of powered loads and overall problem specification. This is used to 
