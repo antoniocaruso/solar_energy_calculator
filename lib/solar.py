@@ -7,7 +7,7 @@ from openmdao.api import ScipyOptimizer
 import numpy as np
 import datetime
 
-from parser import get_data, get_nrel
+from lib.parser import get_data, get_nrel
 
 # use the DC power value from the NREL data (instead of the AC)
 power_idx = -2

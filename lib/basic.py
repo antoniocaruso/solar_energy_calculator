@@ -5,10 +5,9 @@ from openmdao.api import Component, Group, Problem, IndepVarComp
 
 import numpy as np
 
-from parser import parse_data
-
-from solar import Batteries, DataSource, Costs
-from make_plot import make_plot
+from lib.parser import parse_data
+from lib.solar import Batteries, DataSource, Costs
+from lib.make_plot import make_plot
 
 class BasicLoads(Component):
     """
